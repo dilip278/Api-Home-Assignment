@@ -124,7 +124,7 @@ class ApiController extends BaseController
                     "address"=> $request['address'],
                     "status"=> $request['status']
                 );
-            //save request data to employee table
+                //save request data to employee table
                 Employee::create($requested_data);
 
                 //send success response
@@ -136,6 +136,7 @@ class ApiController extends BaseController
                 return response($response,200);
             }
         }else{
+            //failure response
             $response = [
                 'status'=>400,
                 'success' => false,
@@ -143,7 +144,7 @@ class ApiController extends BaseController
             ];
             return response($response,400);
         }
-        
+       
     }
 
     //api to get emploee details based on employee id
@@ -263,6 +264,35 @@ class ApiController extends BaseController
                 'message' => 'Employee data deleted successfully.'
             ];
             return response($response,200);   
+        }else{
+            //send failure response
+            $response = [
+                'status'=>404,
+                'success' => false,
+                'message' => "No employee found for this employee code",
+                'data'=>null
+            ];
+            return response($response,404);   
+        }
+    }
+
+    //api to search employee based 
+    public function searchEmployee($search_value){
+        //check if employee already exist with email or emp_code
+        $employee=Employee::where(function($query)use($search_value){
+            $query->where('emp_code','like','%'. $search_value.'%')->orWhere('email','like','%'.$search_value.'%')->orWhere('profile','like','%'.$search_value.'%');       
+        })->get();
+
+        //check if data exist or not
+        if(count($employee)!=0){
+            //send success response
+            $response = [
+                'status'=>200,
+                'success' => true,
+                'message' => 'Employee data',
+                'data'=>$employee
+            ];
+            return response($response,200);
         }else{
             //send failure response
             $response = [

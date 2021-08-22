@@ -33,4 +33,6 @@ Route::get('get-employee-details/{emp_code}', [ApiController::class, 'getEmploye
 Route::post('update-employee-details', [ApiController::class, 'updateEmployeeDetails']);
 //api to delete employee details
 Route::get('delete-employee-details/{emp_code}', [ApiController::class, 'deleteEmployeeDetails']);
+//api to search employee details
+Route::get('search-employee-details/{search_value}', [ApiController::class, 'searchEmployee']);
 
