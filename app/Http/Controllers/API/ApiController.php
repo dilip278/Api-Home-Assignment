@@ -75,60 +75,75 @@ class ApiController extends BaseController
 
     //api function to create employee details
     public function creatEmployeeDetails(Request $request){
-        //function to valiate request
-       $validator = Validator::make($request->all(), [
-            "emp_code"=>"required|string",
-            "email"=>"required|email",
-            "first_name" => "required|string",
-            "last_name" => "required|string",
-            "date_of_joining"=>"required|date",
-            "profile"=>"required|string",
-            "qualification"=>"required|string",
-            "department_code"=>"required|integer",
-            "ctc"=>"required|between:0,99.99",
-            "in_hand_salary"=>"required|between:0,99.99",
-            "phone_no"=>"required|array",
-            "address"=>"required|array",
-            "status"=>"required|string"
-        ]);
-        //check if validation fails or not
-        if ($validator->fails()) {
+        //check if employee already exist with email or emp_code
+        $employee=Employee::where(function($query)use($request){
+            $query->where('emp_code', $request['emp_code'])->orWhere('email',$request['email']);       
+        })->get();
+        
+        if(count($employee)==0){
+            //function to valiate request
+            $validator = Validator::make($request->all(), [
+                "emp_code"=>"required|string",
+                "email"=>"required|email",
+                "first_name" => "required|string",
+                "last_name" => "required|string",
+                "date_of_joining"=>"required|date",
+                "profile"=>"required|string",
+                "qualification"=>"required|string",
+                "department_code"=>"required|integer",
+                "ctc"=>"required|between:0,99.99",
+                "in_hand_salary"=>"required|between:0,99.99",
+                "phone_no"=>"required|array",
+                "address"=>"required|array",
+                "status"=>"required|string"
+            ]);
+            //check if validation fails or not
+            if ($validator->fails()) {
 
-            //send validation fail reqponse
+                //send validation fail reqponse
+                $response = [
+                    'status'=>400,
+                    'message' =>'Bad Request',
+                    'error'=>$validator->errors()
+                ];
+                return response($response,400);
+            }else{
+                //create data array to save in employee table
+                $requested_data=array(
+                    "emp_code"=>$request['emp_code'],
+                    "email"=>$request['email'],
+                    "first_name" => $request['first_name'],
+                    "last_name" =>  $request['last_name'],
+                    "date_of_joining"=> $request['date_of_joining'],
+                    "profile"=> $request['profile'],
+                    "qualification"=> $request['qualification'],
+                    "department_code"=> $request['department_code'],
+                    "ctc"=> $request['ctc'],
+                    "in_hand_salary"=> $request['in_hand_salary'],
+                    "phone_no"=>json_encode($request['phone_no']) ,
+                    "address"=> $request['address'],
+                    "status"=> $request['status']
+                );
+            //save request data to employee table
+                Employee::create($requested_data);
+
+                //send success response
+                $response = [
+                    'status'=>200,
+                    'success' => true,
+                    'message' => "Successfully created employee details",
+                ];
+                return response($response,200);
+            }
+        }else{
             $response = [
                 'status'=>400,
-                'message' =>'Bad Request',
-                'error'=>$validator->errors()
+                'success' => false,
+                'message' => "Employee with this emp_code or email already exist",
             ];
             return response($response,400);
-        }else{
-            //create data array to save in employee table
-            $requested_data=array(
-                "emp_code"=>$request['emp_code'],
-                "email"=>$request['email'],
-                "first_name" => $request['first_name'],
-                "last_name" =>  $request['last_name'],
-                "date_of_joining"=> $request['date_of_joining'],
-                "profile"=> $request['profile'],
-                "qualification"=> $request['qualification'],
-                "department_code"=> $request['department_code'],
-                "ctc"=> $request['ctc'],
-                "in_hand_salary"=> $request['in_hand_salary'],
-                "phone_no"=>json_encode($request['phone_no']) ,
-                "address"=> $request['address'],
-                "status"=> $request['status']
-            );
-           //save request data to employee table
-            Employee::create($requested_data);
-
-            //send success response
-            $response = [
-                'status'=>200,
-                'success' => true,
-                'message' => "Successfully created employee details",
-            ];
-            return response($response,200);
         }
+        
     }
 
     //api to get emploee details based on employee id
@@ -149,7 +164,7 @@ class ApiController extends BaseController
                 ];
                 return response($response,200);   
             }else{
-                //send success response
+                //send failure response
                 $response = [
                     'status'=>404,
                     'success' => false,
@@ -232,6 +247,32 @@ class ApiController extends BaseController
                 throw new HttpException(500, $e->getMessage());
             }
       
+    }
+
+    //api to delete employee details
+    public function deleteEmployeeDetails($emp_code){
+        $employee = Employee::where('emp_code',$emp_code)->first();
+
+        //check if data exist or not
+        if($employee!=null){
+            Employee::where('emp_code',$emp_code)->delete();
+            //send success response
+            $response = [
+                'status'=>200,
+                'success' => true,
+                'message' => 'Employee data deleted successfully.'
+            ];
+            return response($response,200);   
+        }else{
+            //send failure response
+            $response = [
+                'status'=>404,
+                'success' => false,
+                'message' => "No employee found for this employee code",
+                'data'=>null
+            ];
+            return response($response,404);   
+        }
     }
   
 }

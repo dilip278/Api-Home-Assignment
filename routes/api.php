@@ -31,4 +31,6 @@ Route::post('create-department-details', [ApiController::class, 'creatDepartment
 Route::get('get-employee-details/{emp_code}', [ApiController::class, 'getEmployeeDetails']);
 //api to update employee details
 Route::post('update-employee-details', [ApiController::class, 'updateEmployeeDetails']);
+//api to delete employee details
+Route::get('delete-employee-details/{emp_code}', [ApiController::class, 'deleteEmployeeDetails']);
 
