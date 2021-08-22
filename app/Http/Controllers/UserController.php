@@ -99,7 +99,6 @@ class UserController extends Controller
             'email' => 'required',
             'phone' => 'required',
             'role' => 'required',
-            'is_disabled' => 'required',
             'password' => 'required|required_with:confirm_password|same:confirm_password|min:4',
             'confirm_password' => 'min:4',
         ]);
@@ -126,8 +125,6 @@ class UserController extends Controller
     {
         $user = User::where('id', $id)->first();
         if($user) {
-            $user->is_deleted = true;
-            $user->deleted_at = Carbon::now();
             $user->save();
 
             return redirect()->route('users.index')
@@ -152,16 +149,6 @@ class UserController extends Controller
                     })
                     ->editColumn('email', function($e) {
                         return $e->email;
-                    })
-                    ->editColumn('disabled', function($e) {
-                        return $e->is_disabled ? "Yes":"No";
-                    })
-                    ->setRowClass(function ($e) {
-                        $class = '';
-                        if($e->is_disabled) {
-                            $class = $class.' deleted';
-                        }
-                        return $class;
                     })
                     ->make(true);
     }

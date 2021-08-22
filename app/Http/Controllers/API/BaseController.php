@@ -37,6 +37,7 @@ class BaseController extends Controller
     public function sendError($error, $errorMessages = [], $code = 404)
     {
     	$response = [
+            'status'=>$code,
             'success' => false,
             'message' => $error,
         ];
@@ -47,6 +48,6 @@ class BaseController extends Controller
         }
 
 
-        return response()->json($response, $code);
+        return response()->json($response);
     }
 }

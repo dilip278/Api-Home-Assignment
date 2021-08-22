@@ -60,22 +60,16 @@
                                         <col width="1%">
                                         <col width="1%">
                                         <col width="1%">
-                                        <col width="1%">
-                                        <col width="1%">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
                                             <th>Role</th>
                                             <th>Phone</th>
                                             <th>Email</th>
-                                            <th>Last Login</th>
-                                            <th>Disabled</th>
                                         </tr>
                                     </thead>
                                     <thead class="filters">
                                         <tr>
-                                            <td></td>
-                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -122,18 +116,16 @@
             {data: 'name', name: 'name'},
             {data: 'role', name: 'role'},
             {data: 'phone', name: 'phone'},
-            {data: 'email', name: 'email'},
-            {data: 'last_login', name: 'last_login'},
-            {data: 'disabled', name: 'disabled'},
+            {data: 'email', name: 'email'}
         ],
         'columnDefs': [
             {
                 'searchable'    : true,
-                'targets'       : [0,1,2,3,4]
+                'targets'       : [0,1,2,3]
             },
             {
                 "orderable": true,
-                "targets": [0,1,2,3,4]
+                "targets": [0,1,2,3]
             }
         ],
         order: [[0, 'asc']]
