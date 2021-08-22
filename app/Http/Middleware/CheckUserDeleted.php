@@ -16,7 +16,7 @@ class CheckUserDeleted
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->check() && (auth()->user()->is_deleted || auth()->user()->is_disabled)) {
+        if (auth()->check() && (auth()->user()->is_deleted)) {
             auth()->logout();
 
             $message = 'Your account has been disabled. Please contact the Administrator.';

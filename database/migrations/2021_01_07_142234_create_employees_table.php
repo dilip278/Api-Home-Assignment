@@ -15,6 +15,8 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->string('emp_code');
+            $table->string('email');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->dateTime('date_of_joining')->nullable();

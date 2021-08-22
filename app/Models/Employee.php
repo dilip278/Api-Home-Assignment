@@ -15,6 +15,8 @@ class Employee extends Model
      * @var array
      */
     protected $fillable = [
+      'emp_code',
+      'email',
       'first_name',
       'last_name',
       'date_of_joining',
@@ -32,9 +34,9 @@ class Employee extends Model
         'address' => 'array'
     ];
 
-    public function employeesData() {
+    public function departmentData() {
 
-      return $this->hasOne('App\Models\Department', 'department_code', 'id');
+      return $this->hasOne('App\Models\Department', 'id', 'department_code');
 
     }
 

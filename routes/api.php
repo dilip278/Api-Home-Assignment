@@ -21,8 +21,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+//api for user login
 Route::post('login', [ApiController::class, 'login']);
-     
-Route::middleware('auth:api')->group( function () {
- });
+//api to create employee details 
+Route::post('create-employees-details', [ApiController::class, 'creatEmployeeDetails']);
+//api to create department details
+Route::post('create-department-details', [ApiController::class, 'creatDepartmentDetails']);
+//api to get employee details
+Route::get('get-employee-details/{emp_code}', [ApiController::class, 'getEmployeeDetails']);
+//api to update employee details
+Route::post('update-employee-details', [ApiController::class, 'updateEmployeeDetails']);
+
