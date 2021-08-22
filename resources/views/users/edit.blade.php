@@ -72,18 +72,9 @@
                                 <div class="form-group">
                                     <label for="role">Role</label>
                                     <select class="form-control select2" id="role" name="role" style="width: 100%;">
+                                        <option value="Admin" {{ $user->role == 'Admin' ? 'selected' : ''}}>Admin</option>
                                         <option value="Manager" {{ $user->role == 'Manager' ? 'selected' : ''}}>Manager</option>
-                                        <option value="Packer" {{ $user->role == 'Packer' ? 'selected' : ''}}>Packer</option>
-                                        <option value="Scanner" {{ $user->role == 'Scanner' ? 'selected' : ''}}>Scanner</option>
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="note">Note</label>
-                                    <textarea class="form-control" name="note" rows="4" cols="50">{{$user->note}}</textarea>
                                 </div>
                             </div>
                         </div>
