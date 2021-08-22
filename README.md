@@ -1,2 +1,2 @@
 # Api-Home-Assignment
-This is a assignment o develop rest api for a company
+This is a assignment to develop rest api for a company
