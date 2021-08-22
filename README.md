@@ -28,5 +28,9 @@
     4. update-employee-details
     5. delete-employee-details/{emp_code}
     6. search-employee-details/{search_value}
-
+9. Create Unit test 
+    1. create separate .env.test file for db and app connection details
+    2. generate test component for test command(php artisan make:test CompanyTest)
+    3. create methods for testing apis in generated test component(method name must start with test)
+    4. run test with ./vendor/bin/phpunit      
 
