@@ -54,7 +54,7 @@ class ServeCommand extends Command
                             ? filemtime($environmentFile)
                             : now()->addDays(30)->getTimestamp();
 
-        $process = $this->startProcess($hasEnvironment);
+        $process = $this->startProcess();
 
         while ($process->isRunning()) {
             if ($hasEnvironment) {
@@ -70,7 +70,7 @@ class ServeCommand extends Command
 
                 $process->stop(5);
 
-                $process = $this->startProcess($hasEnvironment);
+                $process = $this->startProcess();
             }
 
             usleep(500 * 1000);
@@ -90,23 +90,18 @@ class ServeCommand extends Command
     /**
      * Start a new server process.
      *
-     * @param  bool  $hasEnvironment
      * @return \Symfony\Component\Process\Process
      */
-    protected function startProcess($hasEnvironment)
+    protected function startProcess()
     {
-        $process = new Process($this->serverCommand(), null, collect($_ENV)->mapWithKeys(function ($value, $key) use ($hasEnvironment) {
-            if ($this->option('no-reload') || ! $hasEnvironment) {
+        $process = new Process($this->serverCommand(), null, collect($_ENV)->mapWithKeys(function ($value, $key) {
+            if ($this->option('no-reload')) {
                 return [$key => $value];
             }
 
-            return in_array($key, [
-                'APP_ENV',
-                'LARAVEL_SAIL',
-                'PHP_CLI_SERVER_WORKERS',
-                'XDEBUG_CONFIG',
-                'XDEBUG_MODE',
-            ]) ? [$key => $value] : [$key => false];
+            return in_array($key, ['APP_ENV', 'LARAVEL_SAIL'])
+                    ? [$key => $value]
+                    : [$key => false];
         })->all());
 
         $process->start(function ($type, $buffer) {
@@ -154,7 +149,7 @@ class ServeCommand extends Command
     }
 
     /**
-     * Check if the command has reached its max amount of port tries.
+     * Check if command has reached its max amount of port tries.
      *
      * @return bool
      */

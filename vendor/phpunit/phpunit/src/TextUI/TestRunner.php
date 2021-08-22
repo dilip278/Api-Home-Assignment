@@ -14,7 +14,6 @@ use const PHP_SAPI;
 use const PHP_VERSION;
 use function array_diff;
 use function array_map;
-use function array_merge;
 use function assert;
 use function class_exists;
 use function count;
@@ -151,8 +150,6 @@ final class TestRunner extends BaseTestRunner
         }
 
         $this->handleConfiguration($arguments);
-
-        $warnings = array_merge($warnings, $arguments['warnings']);
 
         if (is_int($arguments['columns']) && $arguments['columns'] < 16) {
             $arguments['columns']   = 16;
@@ -883,17 +880,13 @@ final class TestRunner extends BaseTestRunner
     }
 
     /**
-     * @throws \PHPUnit\TextUI\XmlConfiguration\Exception
      * @throws Exception
+     * @throws \PHPUnit\TextUI\XmlConfiguration\Exception
      */
     private function handleConfiguration(array &$arguments): void
     {
         if (!isset($arguments['configurationObject']) && isset($arguments['configuration'])) {
             $arguments['configurationObject'] = (new Loader)->load($arguments['configuration']);
-        }
-
-        if (!isset($arguments['warnings'])) {
-            $arguments['warnings'] = [];
         }
 
         $arguments['debug']     = $arguments['debug'] ?? false;

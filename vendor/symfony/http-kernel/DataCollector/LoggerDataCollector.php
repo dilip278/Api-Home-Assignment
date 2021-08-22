@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
+ * LogDataCollector.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @final
@@ -29,7 +31,7 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
     private $currentRequest;
     private $requestStack;
 
-    public function __construct(object $logger = null, string $containerPathPrefix = null, RequestStack $requestStack = null)
+    public function __construct($logger = null, string $containerPathPrefix = null, RequestStack $requestStack = null)
     {
         if (null !== $logger && $logger instanceof DebugLoggerInterface) {
             $this->logger = $logger;
@@ -44,7 +46,7 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
      */
     public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
-        $this->currentRequest = $this->requestStack && $this->requestStack->getMainRequest() !== $request ? $request : null;
+        $this->currentRequest = $this->requestStack && $this->requestStack->getMasterRequest() !== $request ? $request : null;
     }
 
     /**
@@ -77,32 +79,32 @@ class LoggerDataCollector extends DataCollector implements LateDataCollectorInte
 
     public function getLogs()
     {
-        return $this->data['logs'] ?? [];
+        return isset($this->data['logs']) ? $this->data['logs'] : [];
     }
 
     public function getPriorities()
     {
-        return $this->data['priorities'] ?? [];
+        return isset($this->data['priorities']) ? $this->data['priorities'] : [];
     }
 
     public function countErrors()
     {
-        return $this->data['error_count'] ?? 0;
+        return isset($this->data['error_count']) ? $this->data['error_count'] : 0;
     }
 
     public function countDeprecations()
     {
-        return $this->data['deprecation_count'] ?? 0;
+        return isset($this->data['deprecation_count']) ? $this->data['deprecation_count'] : 0;
     }
 
     public function countWarnings()
     {
-        return $this->data['warning_count'] ?? 0;
+        return isset($this->data['warning_count']) ? $this->data['warning_count'] : 0;
     }
 
     public function countScreams()
     {
-        return $this->data['scream_count'] ?? 0;
+        return isset($this->data['scream_count']) ? $this->data['scream_count'] : 0;
     }
 
     public function getCompilerLogs()

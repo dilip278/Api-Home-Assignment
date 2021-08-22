@@ -116,8 +116,7 @@ trait InteractsWithPivotTable
         // have done any attaching or detaching, and if we have we will touch these
         // relationships if they are configured to touch on any database updates.
         if (count($changes['attached']) ||
-            count($changes['updated']) ||
-            count($changes['detached'])) {
+            count($changes['updated'])) {
             $this->touchIfTouching();
         }
 
@@ -447,7 +446,7 @@ trait InteractsWithPivotTable
                     return 0;
                 }
 
-                $query->whereIn($this->getQualifiedRelatedPivotKeyName(), (array) $ids);
+                $query->whereIn($this->relatedPivotKey, (array) $ids);
             }
 
             // Once we have all of the conditions set on the statement, we are ready
@@ -568,7 +567,7 @@ trait InteractsWithPivotTable
             $query->whereNull(...$arguments);
         }
 
-        return $query->where($this->getQualifiedForeignPivotKeyName(), $this->parent->{$this->parentKey});
+        return $query->where($this->foreignPivotKey, $this->parent->{$this->parentKey});
     }
 
     /**

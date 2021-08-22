@@ -59,13 +59,6 @@ class FormRequest extends Request implements ValidatesWhenResolved
     protected $errorBag = 'default';
 
     /**
-     * Indicates whether validation should stop after the first rule failure.
-     *
-     * @var bool
-     */
-    protected $stopOnFirstFailure = false;
-
-    /**
      * The validator instance.
      *
      * @var \Illuminate\Contracts\Validation\Validator
@@ -111,7 +104,7 @@ class FormRequest extends Request implements ValidatesWhenResolved
         return $factory->make(
             $this->validationData(), $this->container->call([$this, 'rules']),
             $this->messages(), $this->attributes()
-        )->stopOnFirstFailure($this->stopOnFirstFailure);
+        );
     }
 
     /**
@@ -183,16 +176,6 @@ class FormRequest extends Request implements ValidatesWhenResolved
     protected function failedAuthorization()
     {
         throw new AuthorizationException;
-    }
-
-    /**
-     * Get a validated input container for the validated input.
-     *
-     * @return \Illuminate\Support\ValidatedInput
-     */
-    public function safe()
-    {
-        return $this->validator->safe();
     }
 
     /**

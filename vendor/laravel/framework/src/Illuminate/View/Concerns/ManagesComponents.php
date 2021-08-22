@@ -2,10 +2,11 @@
 
 namespace Illuminate\View\Concerns;
 
+use Closure;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
+use Illuminate\View\View;
 use InvalidArgumentException;
 
 trait ManagesComponents
@@ -83,7 +84,9 @@ trait ManagesComponents
 
         $data = $this->componentData();
 
-        $view = value($view, $data);
+        if ($view instanceof Closure) {
+            $view = $view($data);
+        }
 
         if ($view instanceof View) {
             return $view->with($data)->render();
@@ -121,8 +124,6 @@ trait ManagesComponents
      * @param  string  $name
      * @param  string|null  $content
      * @return void
-     *
-     * @throws \InvalidArgumentException
      */
     public function slot($name, $content = null)
     {
@@ -150,7 +151,8 @@ trait ManagesComponents
             $this->slotStack[$this->currentComponent()]
         );
 
-        $this->slots[$this->currentComponent()][$currentSlot] = new HtmlString(trim(ob_get_clean()));
+        $this->slots[$this->currentComponent()]
+                    [$currentSlot] = new HtmlString(trim(ob_get_clean()));
     }
 
     /**

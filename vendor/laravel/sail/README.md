@@ -1,16 +1,14 @@
-<p align="center"><img src="https://raw.githubusercontent.com/laravel/sail/HEAD/art/logo.svg" alt="Logo Laravel Sail"></p>
+# Laravel Sail
 
-<p align="center">
-    <a href="https://packagist.org/packages/laravel/sail">
-        <img src="https://img.shields.io/packagist/dt/laravel/sail" alt="Total Downloads">
-    </a>
-    <a href="https://packagist.org/packages/laravel/sail">
-        <img src="https://img.shields.io/packagist/v/laravel/sail" alt="Latest Stable Version">
-    </a>
-    <a href="https://packagist.org/packages/laravel/sail">
-        <img src="https://img.shields.io/packagist/l/laravel/sail" alt="License">
-    </a>
-</p>
+<a href="https://packagist.org/packages/laravel/sail">
+    <img src="https://img.shields.io/packagist/dt/laravel/sail" alt="Total Downloads">
+</a>
+<a href="https://packagist.org/packages/laravel/sail">
+    <img src="https://img.shields.io/packagist/v/laravel/sail" alt="Latest Stable Version">
+</a>
+<a href="https://packagist.org/packages/laravel/sail">
+    <img src="https://img.shields.io/packagist/l/laravel/sail" alt="License">
+</a>
 
 ## Introduction
 
@@ -22,7 +20,7 @@ Laravel Sail is inspired by and derived from [Vessel](https://github.com/shippin
 
 ## Official Documentation
 
-Documentation for Sail can be found on the [Laravel website](https://laravel.com/docs/sail).
+Documentation for Sail can be found on the [Laravel website](https://laravel.com/docs/installation).
 
 ## Contributing
 

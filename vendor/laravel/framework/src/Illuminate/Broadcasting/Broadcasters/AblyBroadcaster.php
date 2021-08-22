@@ -72,17 +72,11 @@ class AblyBroadcaster extends Broadcaster
 
         $channelName = $this->normalizeChannelName($request->channel_name);
 
-        $user = $this->retrieveUser($request, $channelName);
-
-        $broadcastIdentifier = method_exists($user, 'getAuthIdentifierForBroadcasting')
-                    ? $user->getAuthIdentifierForBroadcasting()
-                    : $user->getAuthIdentifier();
-
         $signature = $this->generateAblySignature(
             $request->channel_name,
             $request->socket_id,
             $userData = array_filter([
-                'user_id' => (string) $broadcastIdentifier,
+                'user_id' => $this->retrieveUser($request, $channelName)->getAuthIdentifier(),
                 'user_info' => $result,
             ])
         );
@@ -126,7 +120,7 @@ class AblyBroadcaster extends Broadcaster
     }
 
     /**
-     * Return true if the channel is protected by authentication.
+     * Return true if channel is protected by authentication.
      *
      * @param  string  $channel
      * @return bool

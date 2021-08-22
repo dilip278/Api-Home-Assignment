@@ -51,7 +51,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
         }
 
         $this->ttl = isset($options['expiretime']) ? (int) $options['expiretime'] : 86400;
-        $this->prefix = $options['prefix'] ?? 'sf2s';
+        $this->prefix = isset($options['prefix']) ? $options['prefix'] : 'sf2s';
     }
 
     /**
@@ -99,13 +99,12 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     }
 
     /**
-     * @return int|false
+     * @return bool
      */
-    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         // not required here because memcached will auto expire the records anyhow.
-        return 0;
+        return true;
     }
 
     /**

@@ -50,13 +50,6 @@ class Connection implements ConnectionInterface
     protected $database;
 
     /**
-     * The type of the connection.
-     *
-     * @var string|null
-     */
-    protected $type;
-
-    /**
      * The table prefix for the connection.
      *
      * @var string
@@ -129,16 +122,9 @@ class Connection implements ConnectionInterface
     /**
      * Indicates if changes have been made to the database.
      *
-     * @var bool
+     * @var int
      */
     protected $recordsModified = false;
-
-    /**
-     * Indicates if the connection should use the "write" PDO connection.
-     *
-     * @var bool
-     */
-    protected $readOnWriteConnection = false;
 
     /**
      * All of the queries run against the connection.
@@ -682,7 +668,7 @@ class Connection implements ConnectionInterface
         // run the SQL against the PDO connection. Then we can calculate the time it
         // took to execute and log the query SQL, bindings and time in our memory.
         try {
-            return $callback($query, $bindings);
+            $result = $callback($query, $bindings);
         }
 
         // If an exception occurs when attempting to run a query, we'll format the error
@@ -693,6 +679,8 @@ class Connection implements ConnectionInterface
                 $query, $this->prepareBindings($bindings), $e
             );
         }
+
+        return $result;
     }
 
     /**
@@ -867,16 +855,6 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Determine if the database connection has modified any database records.
-     *
-     * @return bool
-     */
-    public function hasModifiedRecords()
-    {
-        return $this->recordsModified;
-    }
-
-    /**
      * Indicate if any records have been modified.
      *
      * @param  bool  $value
@@ -887,42 +865,6 @@ class Connection implements ConnectionInterface
         if (! $this->recordsModified) {
             $this->recordsModified = $value;
         }
-    }
-
-    /**
-     * Set the record modification state.
-     *
-     * @param  bool  $value
-     * @return $this
-     */
-    public function setRecordModificationState(bool $value)
-    {
-        $this->recordsModified = $value;
-
-        return $this;
-    }
-
-    /**
-     * Reset the record modification state.
-     *
-     * @return void
-     */
-    public function forgetRecordModificationState()
-    {
-        $this->recordsModified = false;
-    }
-
-    /**
-     * Indicate that the connection should use the write PDO connection for reads.
-     *
-     * @param  bool  $value
-     * @return $this
-     */
-    public function useWriteConnectionWhenReading($value = true)
-    {
-        $this->readOnWriteConnection = $value;
-
-        return $this;
     }
 
     /**
@@ -1021,8 +963,7 @@ class Connection implements ConnectionInterface
             return $this->getPdo();
         }
 
-        if ($this->readOnWriteConnection ||
-            ($this->recordsModified && $this->getConfig('sticky'))) {
+        if ($this->recordsModified && $this->getConfig('sticky')) {
             return $this->getPdo();
         }
 
@@ -1092,16 +1033,6 @@ class Connection implements ConnectionInterface
     public function getName()
     {
         return $this->getConfig('name');
-    }
-
-    /**
-     * Get the database connection full name.
-     *
-     * @return string|null
-     */
-    public function getNameWithReadWriteType()
-    {
-        return $this->getName().($this->readWriteType ? '::'.$this->readWriteType : '');
     }
 
     /**
@@ -1329,19 +1260,6 @@ class Connection implements ConnectionInterface
     public function setDatabaseName($database)
     {
         $this->database = $database;
-
-        return $this;
-    }
-
-    /**
-     * Set the read / write type of the connection.
-     *
-     * @param  string|null  $readWriteType
-     * @return $this
-     */
-    public function setReadWriteType($readWriteType)
-    {
-        $this->readWriteType = $readWriteType;
 
         return $this;
     }

@@ -25,8 +25,20 @@ Zepto(function($) {
    * highlight the current line
    */
   var renderCurrentCodeblock = function(id) {
-    Prism.highlightAll();
-    highlightCurrentLine();
+
+    // remove previous codeblocks so we only render the active one
+    $('.code-block').removeClass('prettyprint');
+
+    // pass the id in when we can for speed
+    if (typeof(id) === 'undefined' || typeof(id) === 'object') {
+      var id = /frame\-line\-([\d]*)/.exec($activeLine.attr('id'))[1];
+    }
+
+    $('#frame-code-linenums-' + id).addClass('prettyprint');
+    $('#frame-code-args-' + id).addClass('prettyprint');
+
+    prettyPrint(highlightCurrentLine);
+
   }
 
   /*
@@ -35,14 +47,28 @@ Zepto(function($) {
    */
 
   var highlightCurrentLine = function() {
+    var activeLineNumber = +($activeLine.find('.frame-line').text());
+    var $lines           = $activeFrame.find('.linenums li');
+    var firstLine        = +($lines.first().val());
+
     // We show more code than needed, purely for proper syntax highlighting
     // Let’s hide a big chunk of that code and then scroll the remaining block
     $activeFrame.find('.code-block').first().css({
       maxHeight: 345,
       overflow: 'hidden',
-    }).scrollTop(999);
+    });
+
+    var $offset = $($lines[activeLineNumber - firstLine - 10]);
+    if ($offset.length > 0) {
+      $offset[0].scrollIntoView();
+    }
+
+    $($lines[activeLineNumber - firstLine - 1]).addClass('current');
+    $($lines[activeLineNumber - firstLine]).addClass('current active');
+    $($lines[activeLineNumber - firstLine + 1]).addClass('current');
 
     $container.scrollTop(0);
+
   }
 
   /*
@@ -74,7 +100,7 @@ Zepto(function($) {
 
   var clipboard = new Clipboard('.clipboard');
   var showTooltip = function(elem, msg) {
-    elem.classList.add('tooltipped', 'tooltipped-s');
+    elem.setAttribute('class', 'clipboard tooltipped tooltipped-s');
     elem.setAttribute('aria-label', msg);
   };
 
@@ -91,7 +117,7 @@ Zepto(function($) {
   var btn = document.querySelector('.clipboard');
 
   btn.addEventListener('mouseleave', function(e) {
-    e.currentTarget.classList.remove('tooltipped', 'tooltipped-s');
+    e.currentTarget.setAttribute('class', 'clipboard');
     e.currentTarget.removeAttribute('aria-label');
   });
 

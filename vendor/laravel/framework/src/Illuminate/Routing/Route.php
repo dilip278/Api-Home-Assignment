@@ -94,13 +94,6 @@ class Route
     protected $originalParameters;
 
     /**
-     * Indicates "trashed" models can be retrieved when resolving implicit model bindings for this route.
-     *
-     * @var bool
-     */
-    protected $withTrashedBindings = false;
-
-    /**
      * Indicates the maximum number of seconds the route should acquire a session lock for.
      *
      * @var int|null
@@ -567,28 +560,6 @@ class Route
     }
 
     /**
-     * Allow "trashed" models to be retrieved when resolving implicit model bindings for this route.
-     *
-     * @return $this
-     */
-    public function withTrashed()
-    {
-        $this->withTrashedBindings = true;
-
-        return $this;
-    }
-
-    /**
-     * Determines if the route allows "trashed" models to be retrieved when resolving implicit model bindings.
-     *
-     * @return bool
-     */
-    public function allowsTrashedBindings()
-    {
-        return $this->withTrashedBindings;
-    }
-
-    /**
      * Set a default value for the route.
      *
      * @param  string  $key
@@ -775,8 +746,6 @@ class Route
      */
     public function prefix($prefix)
     {
-        $prefix = $prefix ?? '';
-
         $this->updatePrefixOnAction($prefix);
 
         $uri = rtrim($prefix, '/').'/'.ltrim($this->uri, '/');
@@ -960,34 +929,6 @@ class Route
         if (isset($this->action['domain'])) {
             $this->domain($this->action['domain']);
         }
-
-        return $this;
-    }
-
-    /**
-     * Get the value of the action that should be taken on a missing model exception.
-     *
-     * @return \Closure|null
-     */
-    public function getMissing()
-    {
-        $missing = $this->action['missing'] ?? null;
-
-        return is_string($missing) &&
-            Str::startsWith($missing, 'C:32:"Opis\\Closure\\SerializableClosure')
-                ? unserialize($missing)
-                : $missing;
-    }
-
-    /**
-     * Define the callable that should be invoked on a missing model exception.
-     *
-     * @param  \Closure  $missing
-     * @return $this
-     */
-    public function missing($missing)
-    {
-        $this->action['missing'] = $missing;
 
         return $this;
     }
@@ -1226,10 +1167,8 @@ class Route
     {
         if ($this->action['uses'] instanceof Closure) {
             $this->action['uses'] = serialize(new SerializableClosure($this->action['uses']));
-        }
 
-        if (isset($this->action['missing']) && $this->action['missing'] instanceof Closure) {
-            $this->action['missing'] = serialize(new SerializableClosure($this->action['missing']));
+            // throw new LogicException("Unable to prepare route [{$this->uri}] for serialization. Uses Closure.");
         }
 
         $this->compileRoute();

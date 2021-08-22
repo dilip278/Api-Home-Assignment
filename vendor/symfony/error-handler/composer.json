@@ -1,7 +1,7 @@
 {
     "name": "symfony/error-handler",
     "type": "library",
-    "description": "Provides tools to manage errors and ease debugging PHP code",
+    "description": "Symfony ErrorHandler Component",
     "keywords": [],
     "homepage": "https://symfony.com",
     "license": "MIT",
@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "psr/log": "^1|^2|^3",
+        "psr/log": "^1.0",
+        "symfony/polyfill-php80": "^1.15",
         "symfony/var-dumper": "^4.4|^5.0"
     },
     "require-dev": {
