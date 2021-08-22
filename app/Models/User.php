@@ -23,9 +23,6 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'note',
-        'last_login',
-        'last_app_login',
         'is_deleted',
         'is_disabled',
         'deleted_at'

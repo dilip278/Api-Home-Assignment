@@ -63,18 +63,9 @@
                                 <div class="form-group">
                                     <label for="role">Role</label>
                                     <select class="form-control select2" id="role" name="role" style="width: 100%;">
+                                        <option value="Manager">Admin</option>
                                         <option value="Manager">Manager</option>
-                                        <option value="Packer">Packer</option>
-                                        <option value="Scanner">Scanner</option>
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="note">Note</label>
-                                    <textarea class="form-control" name="note" rows="4" cols="50"></textarea>
                                 </div>
                             </div>
                         </div>
